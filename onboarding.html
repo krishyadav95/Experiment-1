@@ -4,491 +4,720 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080A18" />
-  <title>Your Wellness Profile — Fitnessify AI</title>
-  <meta name="description" content="Answer a few questions about your lifestyle and let Vita build your personalized wellness plan." />
+  <title>Complete Your Onboarding — Fitnessify AI</title>
+  <meta
+    name="description"
+    content="Tell Fitnessify AI a little about yourself so we can personalize your fitness experience."
+  />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/main.css" />
   <style>
-    body { background: var(--bg); min-height: 100vh; }
+    body {
+      background:
+        radial-gradient(circle at top, rgba(67, 97, 238, 0.18), transparent 32%),
+        linear-gradient(180deg, var(--bg-surface) 0%, var(--bg) 42%, var(--bg) 100%);
+      min-height: 100vh;
+    }
 
-    /* ====  TOP BAR  ==== */
     .onboard-nav {
-      position: sticky; top: 0; z-index: 50;
-      background: var(--bg-nav); backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      height: 64px;
+      padding: 0 24px;
+      background: var(--bg-nav);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
-      padding: 0 28px; height: 62px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .onboard-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; color: var(--text-primary); text-decoration: none; }
-    .logo-mark { width: 32px; height: 32px; border-radius: 8px; display: block; object-fit: cover; box-shadow: 0 4px 14px var(--primary-glow); }
-    .onboard-nav-right { display: flex; align-items: center; gap: 10px; }
-    .step-counter-pill {
-      background: var(--primary-subtle); color: var(--primary);
-      border: 1px solid var(--border); border-radius: var(--radius-full);
-      padding: 5px 14px; font-size: 0.8125rem; font-weight: 600;
     }
 
-    /* ====  PROGRESS  ==== */
-    .progress-header {
-      background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 16px 28px;
+    .onboard-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.0625rem;
     }
-    .progress-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .progress-label { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
-    .step-dots { display: flex; gap: 6px; align-items: center; }
-    .step-dot {
-      width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
-      background: var(--border-solid); transition: var(--transition);
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: block;
+      object-fit: cover;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .onboard-shell {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-card,
+    .form-card {
+      background: color-mix(in srgb, var(--bg-card) 86%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-card {
+      padding: 36px;
+      position: sticky;
+      top: 96px;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -20% auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 65%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--primary-subtle);
+      color: var(--primary);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.02;
+      margin-bottom: 14px;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      max-width: 40ch;
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 14px;
+      margin: 0;
       padding: 0;
-    }
-    .step-dot.active    { background: var(--primary); width: 24px; border-radius: 5px; }
-    .step-dot.completed { background: var(--accent); }
-
-    /* ====  MAIN CONTENT  ==== */
-    .onboard-main {
-      max-width: 680px; margin: 0 auto;
-      padding: 40px 24px 120px;
+      list-style: none;
     }
 
-    /* Step header */
-    .step-header { text-align: center; margin-bottom: 40px; }
-    .step-emoji-big { font-size: 3rem; margin-bottom: 12px; display: block; }
-    .step-main-title { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; margin-bottom: 8px; }
-    .step-main-sub   { font-size: 0.9375rem; color: var(--text-secondary); }
-
-    /* Panes */
-    .step-pane { display: none; animation: fadeUp 0.4s var(--ease) both; }
-    .step-pane.active { display: block; }
-
-    /* chip selectors */
-    .chips-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-    .multi-chip {
-      padding: 10px 18px; border-radius: var(--radius-full);
-      background: var(--bg-card); border: 1.5px solid var(--border-solid);
-      font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: var(--transition);
-      display: flex; align-items: center; gap: 6px; user-select: none;
-    }
-    .multi-chip:hover   { border-color: var(--primary); color: var(--primary); background: var(--primary-subtle); }
-    .multi-chip.selected { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 4px 14px var(--primary-glow); }
-
-    /* range slider */
-    .range-wrap { padding: 8px 0; }
-    input[type="range"] {
-      width: 100%; appearance: none; -webkit-appearance: none;
-      height: 6px; border-radius: var(--radius-full);
-      background: linear-gradient(to right, var(--primary) 0%, var(--primary) var(--pct, 50%), var(--border-solid) var(--pct, 50%));
-      outline: none; cursor: pointer;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
-      background: var(--primary); border: 3px solid var(--bg-surface);
-      box-shadow: 0 2px 10px var(--primary-glow); cursor: pointer; transition: var(--transition);
-    }
-    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-    .range-labels { display: flex; justify-content: space-between; margin-top: 6px; }
-    .range-label  { font-size: 0.75rem; color: var(--text-muted); }
-    .range-value  {
-      text-align: center; margin-top: 6px; font-size: 1.25rem; font-weight: 700;
-      color: var(--primary); font-family: var(--font-display);
+    .benefit-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--bg-surface) 82%, transparent);
+      border: 1px solid var(--border);
     }
 
-    /* two-column inputs */
-    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 480px) { .input-row { grid-template-columns: 1fr; } }
-
-    /* Input error */
-    .input.input-error { border-color: var(--error); box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
-
-    /* Info hint */
-    .hint {
-      background: var(--primary-subtle); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 12px 16px;
-      font-size: 0.8125rem; color: var(--text-secondary);
-      display: flex; align-items: flex-start; gap: 8px;
-      margin-bottom: 20px; line-height: 1.5;
+    .benefit-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      font-size: 1rem;
+      flex-shrink: 0;
     }
 
-    /* Card group */
-    .option-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    @media (max-width: 480px) { .option-cards { grid-template-columns: 1fr; } }
-    .option-card {
-      background: var(--bg-card); border: 2px solid var(--border-solid);
-      border-radius: var(--radius-lg); padding: 20px 18px; cursor: pointer;
-      transition: var(--transition); display: flex; flex-direction: column; gap: 6px;
-      user-select: none;
+    .benefit-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
     }
-    .option-card:hover  { border-color: var(--primary); background: var(--primary-subtle); }
-    .option-card.selected { border-color: var(--primary); background: var(--primary-subtle); box-shadow: 0 0 0 3px var(--primary-glow); }
-    .option-card-icon  { font-size: 1.6rem; }
-    .option-card-title { font-weight: 700; font-size: 0.9375rem; }
-    .option-card-desc  { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4; }
 
-    /* ====  BOTTOM NAV  ==== */
-    .onboard-bottom {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-      background: var(--bg-nav); backdrop-filter: blur(14px);
-      border-top: 1px solid var(--border); padding: 14px 28px;
-      display: flex; align-items: center; justify-content: space-between;
+    .benefit-copy span {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
-    .gen-btn-wrap { display: flex; align-items: center; gap: 12px; }
-    .gen-note { font-size: 0.8125rem; color: var(--text-muted); }
+
+    .form-card {
+      padding: 32px;
+    }
+
+    .form-header {
+      margin-bottom: 26px;
+    }
+
+    .form-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .onboarding-form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .goal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .goal-option {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      border: 1.5px solid var(--border-solid);
+      border-radius: 18px;
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .goal-option:hover {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+
+    .goal-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .goal-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .goal-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .goal-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.9375rem;
+    }
+
+    .goal-copy span {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+
+    .helper-text {
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      margin-top: -6px;
+    }
+
+    .status-banner {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .status-banner.show {
+      display: block;
+    }
+
+    .status-banner.error {
+      border-color: rgba(239, 68, 68, 0.28);
+      background: rgba(127, 29, 29, 0.18);
+      color: #fecaca;
+    }
+
+    .status-banner.success {
+      border-color: rgba(16, 185, 129, 0.28);
+      background: rgba(6, 78, 59, 0.18);
+      color: #bbf7d0;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .form-note {
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+
+    .input.input-error,
+    .goal-group.input-error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+      border-radius: 18px;
+    }
+
+    @media (max-width: 960px) {
+      .onboard-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        position: relative;
+        top: 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .onboard-nav {
+        padding-inline: 18px;
+      }
+
+      .onboard-shell {
+        padding: 24px 16px 56px;
+      }
+
+      .hero-card,
+      .form-card {
+        padding: 24px;
+        border-radius: 22px;
+      }
+
+      .input-grid,
+      .goal-grid,
+      .form-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        display: grid;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-
-<!-- TOP NAV -->
-<nav class="onboard-nav" aria-label="Onboarding navigation">
-  <a href="index.html" class="onboard-logo" aria-label="Fitnessify AI Home">
-    <img src="assets/fit.jpg" alt="Fitnessify AI logo" class="logo-mark" />
-    <span>Fitnessify <span class="gradient-text">AI</span></span>
-  </a>
-  <div class="onboard-nav-right">
-    <span class="step-counter-pill" id="stepCounter">Step 1 of 8</span>
+  <nav class="onboard-nav" aria-label="Onboarding navigation">
+    <a href="index.html" class="onboard-logo" aria-label="Fitnessify AI Home">
+      <img src="assets/fit.jpg" alt="Fitnessify AI logo" class="logo-mark" />
+      <span>Fitnessify <span class="gradient-text">AI</span></span>
+    </a>
     <button data-theme-toggle class="btn btn-ghost btn-icon" title="Toggle theme"></button>
-  </div>
-</nav>
+  </nav>
 
-<!-- PROGRESS BAR -->
-<div class="progress-header">
-  <div class="progress-top">
-    <span class="progress-label">Building your wellness profile</span>
-    <div class="step-dots" id="stepDots" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="8"></div>
-  </div>
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-  </div>
-</div>
+  <main class="onboard-shell">
+    <section class="hero-card" aria-labelledby="heroTitle">
+      <div class="eyebrow">Personalized onboarding</div>
+      <h1 class="hero-title" id="heroTitle">Let&apos;s build a profile that fits your routine.</h1>
+      <p class="hero-subtitle">
+        We&apos;ll use your basic details and primary goal to shape your dashboard, coaching prompts, and recommendations.
+      </p>
 
-<!-- MAIN CONTENT -->
-<main class="onboard-main">
+      <ul class="benefit-list">
+        <li class="benefit-item">
+          <div class="benefit-icon">01</div>
+          <div class="benefit-copy">
+            <strong>Start with the essentials</strong>
+            <span>Your name and fitness goal are enough to get you into the product quickly.</span>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <div class="benefit-icon">02</div>
+          <div class="benefit-copy">
+            <strong>Personalize the first dashboard</strong>
+            <span>Optional details like age, activity level, and workout frequency help tailor the experience.</span>
+          </div>
+        </li>
+        <li class="benefit-item">
+          <div class="benefit-icon">03</div>
+          <div class="benefit-copy">
+            <strong>Pick up where you left off</strong>
+            <span>If you&apos;ve already started onboarding, we&apos;ll prefill what we find in your profile.</span>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-  <!-- Step header (dynamic) -->
-  <div class="step-header">
-    <span class="step-emoji-big" id="stepEmoji">👤</span>
-    <h1 class="step-main-title" id="stepTitle">Let's start with you</h1>
-    <p class="step-main-sub" id="stepSubtitle">Basic information to personalize your experience</p>
-  </div>
-
-  <!-- ===== STEP 1: BASIC STATS ===== -->
-  <div class="step-pane" data-step="1" aria-label="Step 1: Basic stats">
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label" for="f_age">Age <span aria-hidden="true">*</span></label>
-        <input class="input" type="number" id="f_age" data-field="age" placeholder="25" min="10" max="100" required />
+    <section class="form-card" aria-labelledby="formTitle">
+      <div class="form-header">
+        <h2 class="form-title" id="formTitle">Complete your onboarding</h2>
+        <p class="form-subtitle">
+          This takes less than a minute. We&apos;ll save your profile and send you straight to your dashboard.
+        </p>
       </div>
-      <div class="input-group">
-        <label class="input-label" for="f_gender">Gender</label>
-        <select class="input" id="f_gender" data-field="gender">
-          <option value="">Prefer not to say</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="non-binary">Non-binary</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-    </div>
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label" for="f_height">Height (cm) <span aria-hidden="true">*</span></label>
-        <input class="input" type="number" id="f_height" data-field="height" placeholder="170" min="100" max="250" required />
-      </div>
-      <div class="input-group">
-        <label class="input-label" for="f_weight">Weight (kg) <span aria-hidden="true">*</span></label>
-        <input class="input" type="number" id="f_weight" data-field="weight" placeholder="70" min="20" max="300" required />
-      </div>
-    </div>
-    <div class="input-group">
-      <label class="input-label" for="f_city">City / Country (for climate context)</label>
-      <input class="input" type="text" id="f_city" data-field="city" placeholder="e.g. Mumbai, India" />
-    </div>
-  </div>
 
-  <!-- ===== STEP 2: GOALS ===== -->
-  <div class="step-pane" data-step="2" aria-label="Step 2: Health goals">
-    <div class="hint">
-      <span>💡</span>
-      <span>Select all that apply. Vita will balance all your goals in a unified plan.</span>
-    </div>
-    <div class="chips-grid" role="group" aria-label="Select your health goals">
-      <button class="multi-chip" data-group="goals" data-value="weight-loss">⚖️ Lose Weight</button>
-      <button class="multi-chip" data-group="goals" data-value="muscle-gain">💪 Build Muscle</button>
-      <button class="multi-chip" data-group="goals" data-value="energy">⚡ More Energy</button>
-      <button class="multi-chip" data-group="goals" data-value="stress-relief">🧘 Reduce Stress</button>
-      <button class="multi-chip" data-group="goals" data-value="better-sleep">😴 Sleep Better</button>
-      <button class="multi-chip" data-group="goals" data-value="hydration">💧 Drink More Water</button>
-      <button class="multi-chip" data-group="goals" data-value="nutrition">🥗 Eat Healthier</button>
-      <button class="multi-chip" data-group="goals" data-value="flexibility">🤸 Improve Flexibility</button>
-      <button class="multi-chip" data-group="goals" data-value="mental-clarity">🧠 Mental Clarity</button>
-      <button class="multi-chip" data-group="goals" data-value="general">✨ General Wellness</button>
-    </div>
-  </div>
+      <div id="statusBanner" class="status-banner" role="status" aria-live="polite"></div>
 
-  <!-- ===== STEP 3: ACTIVITY & WORK ===== -->
-  <div class="step-pane" data-step="3" aria-label="Step 3: Activity and work">
-    <div class="input-group mb-6" style="margin-bottom: 24px;">
-      <label class="input-label" id="activityLabel">Current Activity Level</label>
-      <div class="option-cards" role="group" aria-labelledby="activityLabel">
-        <div class="option-card" data-field-card="activityLevel" data-value="sedentary" onclick="selectOptionCard(this,'activityLevel')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">🛋️</span><span class="option-card-title">Sedentary</span>
-          <span class="option-card-desc">Little to no exercise, mostly sitting</span>
+      <form id="onboardingForm" class="onboarding-form" novalidate>
+        <div class="input-group">
+          <label class="input-label" for="name">Full Name <span aria-hidden="true">*</span></label>
+          <input
+            class="input"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          />
         </div>
-        <div class="option-card" data-field-card="activityLevel" data-value="light" onclick="selectOptionCard(this,'activityLevel')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">🚶</span><span class="option-card-title">Lightly Active</span>
-          <span class="option-card-desc">Walk occasionally, light activity 1-2x/week</span>
+
+        <div class="input-group goal-group" id="goalGroup">
+          <label class="input-label">Fitness Goal <span aria-hidden="true">*</span></label>
+          <div class="goal-grid" role="radiogroup" aria-label="Fitness goal">
+            <label class="goal-option" data-goal-option>
+              <input type="radio" name="goal" value="Lose Weight" />
+              <span class="goal-icon">⚖️</span>
+              <span class="goal-copy">
+                <strong>Lose Weight</strong>
+                <span>Build healthier routines with steady progress.</span>
+              </span>
+            </label>
+
+            <label class="goal-option" data-goal-option>
+              <input type="radio" name="goal" value="Build Muscle" />
+              <span class="goal-icon">💪</span>
+              <span class="goal-copy">
+                <strong>Build Muscle</strong>
+                <span>Focus on strength, recovery, and consistency.</span>
+              </span>
+            </label>
+
+            <label class="goal-option" data-goal-option>
+              <input type="radio" name="goal" value="Improve Endurance" />
+              <span class="goal-icon">🏃</span>
+              <span class="goal-copy">
+                <strong>Improve Endurance</strong>
+                <span>Increase stamina for cardio and everyday energy.</span>
+              </span>
+            </label>
+
+            <label class="goal-option" data-goal-option>
+              <input type="radio" name="goal" value="Stay Healthy" />
+              <span class="goal-icon">🌿</span>
+              <span class="goal-copy">
+                <strong>Stay Healthy</strong>
+                <span>Maintain a balanced routine and feel your best.</span>
+              </span>
+            </label>
+          </div>
         </div>
-        <div class="option-card" data-field-card="activityLevel" data-value="moderate" onclick="selectOptionCard(this,'activityLevel')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">🏃</span><span class="option-card-title">Moderately Active</span>
-          <span class="option-card-desc">Exercise or active work 3-4x/week</span>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label class="input-label" for="age">Age</label>
+            <input
+              class="input"
+              type="number"
+              id="age"
+              name="age"
+              min="13"
+              max="100"
+              placeholder="25"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="activityLevel">Activity Level</label>
+            <select class="input" id="activityLevel" name="activityLevel">
+              <option value="">Select one</option>
+              <option value="beginner">Beginner</option>
+              <option value="light">Lightly active</option>
+              <option value="moderate">Moderately active</option>
+              <option value="very-active">Very active</option>
+            </select>
+          </div>
         </div>
-        <div class="option-card" data-field-card="activityLevel" data-value="very-active" onclick="selectOptionCard(this,'activityLevel')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">🏋️</span><span class="option-card-title">Very Active</span>
-          <span class="option-card-desc">Intense exercise or physical job daily</span>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label class="input-label" for="workoutsPerWeek">Workouts Per Week</label>
+            <input
+              class="input"
+              type="number"
+              id="workoutsPerWeek"
+              name="workoutsPerWeek"
+              min="0"
+              max="14"
+              placeholder="3"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="experience">Training Experience</label>
+            <select class="input" id="experience" name="experience">
+              <option value="">Select one</option>
+              <option value="new">New to fitness</option>
+              <option value="returning">Returning after a break</option>
+              <option value="consistent">Already consistent</option>
+            </select>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="input-group" id="workTypeHidden" style="margin-bottom: 24px;">
-      <label class="input-label" id="workLabel">Type of Work</label>
-      <div class="option-cards" role="group" aria-labelledby="workLabel">
-        <div class="option-card" data-field-card="workType" data-value="desk-job" onclick="selectOptionCard(this,'workType')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">💻</span><span class="option-card-title">Desk / Office</span>
+        <p class="helper-text">
+          Required fields are saved to the <code>profiles</code> table. Optional details are included so this page feels like a real onboarding step and can be extended later.
+        </p>
+
+        <div class="form-actions">
+          <button type="submit" id="saveButton" class="btn btn-primary">Save and Continue</button>
+          <a href="index.html" class="btn btn-secondary">Back to Home</a>
         </div>
-        <div class="option-card" data-field-card="workType" data-value="physical" onclick="selectOptionCard(this,'workType')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">⚒️</span><span class="option-card-title">Physical Work</span>
-        </div>
-        <div class="option-card" data-field-card="workType" data-value="mixed" onclick="selectOptionCard(this,'workType')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">🔄</span><span class="option-card-title">Mixed</span>
-        </div>
-        <div class="option-card" data-field-card="workType" data-value="student" onclick="selectOptionCard(this,'workType')" tabindex="0" role="radio" aria-checked="false">
-          <span class="option-card-icon">📚</span><span class="option-card-title">Student</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="input-group">
-      <label class="input-label" for="f_workHours">Work Hours Per Day</label>
-      <input class="input" type="number" id="f_workHours" data-field="workHours" placeholder="8" min="1" max="20" />
-    </div>
-  </div>
+        <p class="form-note">
+          Wellness guidance only. Not medical advice; consult a healthcare professional for medical concerns.
+        </p>
+      </form>
+    </section>
+  </main>
 
-  <!-- ===== STEP 4: SLEEP ===== -->
-  <div class="step-pane" data-step="4" aria-label="Step 4: Sleep patterns">
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label" for="f_wakeTime">Typical Wake Time <span aria-hidden="true">*</span></label>
-        <input class="input" type="time" id="f_wakeTime" data-field="wakeTime" value="07:00" required />
-      </div>
-      <div class="input-group">
-        <label class="input-label" for="f_sleepTime">Typical Bedtime <span aria-hidden="true">*</span></label>
-        <input class="input" type="time" id="f_sleepTime" data-field="sleepTime" value="23:00" required />
-      </div>
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    const onboardingForm = document.getElementById('onboardingForm');
+    const nameInput = document.getElementById('name');
+    const goalGroup = document.getElementById('goalGroup');
+    const saveButton = document.getElementById('saveButton');
+    const statusBanner = document.getElementById('statusBanner');
+    const goalOptions = Array.from(document.querySelectorAll('[data-goal-option]'));
 
-    <div class="input-group">
-      <label class="input-label" id="sleepQualityLabel">Sleep Quality</label>
-      <div class="range-wrap">
-        <input type="range" id="f_sleepQuality" data-field="sleepQuality" min="1" max="10" value="5" aria-label="Sleep quality from 1 to 10"
-          oninput="updateRange(this, 'sleepQualityVal')" style="--pct:50%" />
-        <div class="range-labels">
-          <span class="range-label">😫 Poor</span>
-          <span class="range-label">😐 OK</span>
-          <span class="range-label">😴 Great</span>
-        </div>
-        <div class="range-value" id="sleepQualityVal">5 / 10</div>
-      </div>
-    </div>
+    function showStatus(message, type = 'error') {
+      statusBanner.textContent = message;
+      statusBanner.className = `status-banner show ${type}`;
+    }
 
-    <div class="input-group">
-      <label class="input-label" for="f_sleepIssues">Any sleep issues?</label>
-      <div class="chips-grid" role="group" aria-label="Sleep issues">
-        <button class="multi-chip" data-group="sleepIssues" data-value="insomnia">😵 Insomnia</button>
-        <button class="multi-chip" data-group="sleepIssues" data-value="snoring">😤 Snoring</button>
-        <button class="multi-chip" data-group="sleepIssues" data-value="waking">🌃 Waking at Night</button>
-        <button class="multi-chip" data-group="sleepIssues" data-value="oversleeping">☀️ Oversleeping</button>
-        <button class="multi-chip" data-group="sleepIssues" data-value="none" data-exclusive="true">✅ None</button>
-      </div>
-    </div>
-  </div>
+    function clearStatus() {
+      statusBanner.textContent = '';
+      statusBanner.className = 'status-banner';
+    }
 
-  <!-- ===== STEP 5: EATING HABITS ===== -->
-  <div class="step-pane" data-step="5" aria-label="Step 5: Eating habits">
-    <div class="input-group">
-      <label class="input-label" id="dietLabel">Diet Type</label>
-      <div class="chips-grid" role="group" aria-labelledby="dietLabel">
-        <button class="multi-chip" data-group="dietType" data-value="omnivore" data-exclusive="true">🍖 Omnivore</button>
-        <button class="multi-chip" data-group="dietType" data-value="vegetarian" data-exclusive="true">🥕 Vegetarian</button>
-        <button class="multi-chip" data-group="dietType" data-value="vegan" data-exclusive="true">🌱 Vegan</button>
-        <button class="multi-chip" data-group="dietType" data-value="pescatarian" data-exclusive="true">🐟 Pescatarian</button>
-        <button class="multi-chip" data-group="dietType" data-value="keto" data-exclusive="true">🥑 Keto</button>
-        <button class="multi-chip" data-group="dietType" data-value="intermittent" data-exclusive="true">⏱️ Intermittent Fasting</button>
-      </div>
-    </div>
+    function getSelectedGoal() {
+      const selectedInput = onboardingForm.querySelector('input[name="goal"]:checked');
+      return selectedInput ? selectedInput.value : '';
+    }
 
-    <div class="input-group">
-      <label class="input-label" for="f_mealTimes">Typical Meal Times</label>
-      <input class="input" type="text" id="f_mealTimes" data-field="mealTimes" placeholder="e.g. 8 AM breakfast, 1 PM lunch, 8 PM dinner" />
-    </div>
+    function syncGoalSelection() {
+      const selectedGoal = getSelectedGoal();
+      goalOptions.forEach((option) => {
+        const input = option.querySelector('input[name="goal"]');
+        option.classList.toggle('selected', input.value === selectedGoal);
+      });
+    }
 
-    <div class="input-group">
-      <label class="input-label" for="f_allergies">Food Allergies or Restrictions</label>
-      <input class="input" type="text" id="f_allergies" data-field="allergies" placeholder="e.g. nuts, gluten, lactose intolerant, none" />
-    </div>
+    function setSavingState(isSaving) {
+      saveButton.disabled = isSaving;
+      saveButton.classList.toggle('btn-loading', isSaving);
+      saveButton.textContent = isSaving ? '' : 'Save and Continue';
+    }
 
-    <div class="input-group">
-      <label class="input-label" for="f_junkFood">How often do you eat junk/highly processed food?</label>
-      <select class="input" id="f_junkFood" data-field="junkFrequency">
-        <option value="rarely">Rarely (once a week or less)</option>
-        <option value="sometimes">Sometimes (2-3x/week)</option>
-        <option value="often" selected>Often (daily)</option>
-        <option value="mostly">Mostly processed food</option>
-      </select>
-    </div>
-  </div>
+    function validateForm() {
+      let isValid = true;
+      const selectedGoal = getSelectedGoal();
 
-  <!-- ===== STEP 6: DAILY ROUTINE ===== -->
-  <div class="step-pane" data-step="6" aria-label="Step 6: Daily routine">
-    <div class="hint">
-      <span>💡</span>
-      <span>The more detail you give, the more precisely Vita can slot healthy habits into your existing schedule.</span>
-    </div>
+      nameInput.classList.remove('input-error');
+      goalGroup.classList.remove('input-error');
 
-    <div class="input-group">
-      <label class="input-label" for="f_morningRoutine">Morning Routine</label>
-      <textarea class="input" id="f_morningRoutine" data-field="morningRoutine"
-        placeholder="e.g. Wake at 7, check phone 30min, quick shower, skip breakfast, commute 1hr by train, at desk by 9..." rows="3"></textarea>
-    </div>
+      if (!nameInput.value.trim()) {
+        nameInput.classList.add('input-error');
+        isValid = false;
+      }
 
-    <div class="input-group">
-      <label class="input-label" for="f_eveningRoutine">Evening Routine</label>
-      <textarea class="input" id="f_eveningRoutine" data-field="eveningRoutine"
-        placeholder="e.g. Finish work 7pm, dinner at 8, TV until 11, sleep..." rows="3"></textarea>
-    </div>
+      if (!selectedGoal) {
+        goalGroup.classList.add('input-error');
+        isValid = false;
+      }
 
-    <div class="input-group">
-      <label class="input-label" for="f_transport">Main mode of daily transport</label>
-      <select class="input" id="f_transport" data-field="transport">
-        <option value="car">Car / Bike (drive)</option>
-        <option value="public">Public transport</option>
-        <option value="walk">Walking / Cycling</option>
-        <option value="wfh">Work from home</option>
-      </select>
-    </div>
-  </div>
+      if (!isValid) {
+        const message = 'Please enter your name and choose a fitness goal.';
+        showStatus(message, 'error');
+        alert(message);
+      }
 
-  <!-- ===== STEP 7: STRESS & WELLNESS ===== -->
-  <div class="step-pane" data-step="7" aria-label="Step 7: Stress and wellness">
-    <div class="input-group">
-      <label class="input-label">Daily Stress Level</label>
-      <div class="range-wrap">
-        <input type="range" id="f_stressLevel" data-field="stressLevel" min="1" max="10" value="5"
-          oninput="updateRange(this, 'stressLevelVal')" style="--pct:50%" aria-label="Stress level 1 to 10" />
-        <div class="range-labels">
-          <span class="range-label">😌 Chill</span>
-          <span class="range-label">😐 Moderate</span>
-          <span class="range-label">😰 High</span>
-        </div>
-        <div class="range-value" id="stressLevelVal">5 / 10</div>
-      </div>
-    </div>
+      return isValid;
+    }
 
-    <div class="input-group">
-      <label class="input-label">Primary Stress Sources</label>
-      <div class="chips-grid" role="group" aria-label="Stress sources">
-        <button class="multi-chip" data-group="stressSources" data-value="work">💼 Work</button>
-        <button class="multi-chip" data-group="stressSources" data-value="finances">💰 Finances</button>
-        <button class="multi-chip" data-group="stressSources" data-value="relationships">❤️ Relationships</button>
-        <button class="multi-chip" data-group="stressSources" data-value="health">🏥 Health</button>
-        <button class="multi-chip" data-group="stressSources" data-value="studies">📚 Studies</button>
-        <button class="multi-chip" data-group="stressSources" data-value="low" data-exclusive="true">😊 Low Stress</button>
-      </div>
-    </div>
+    async function loadExistingProfile(user) {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
 
-    <div class="input-group">
-      <label class="input-label" for="f_hobbies">Hobbies & Activities You Enjoy</label>
-      <input class="input" type="text" id="f_hobbies" data-field="hobbies" placeholder="e.g. reading, gaming, cooking, cycling, music..." />
-    </div>
+      if (error) {
+        console.warn('Profile prefill skipped:', error);
+        return;
+      }
 
-    <div class="input-group">
-      <label class="input-label">Do you currently practice any of these?</label>
-      <div class="chips-grid" role="group" aria-label="Wellness practices">
-        <button class="multi-chip" data-group="practices" data-value="meditation">🧘 Meditation</button>
-        <button class="multi-chip" data-group="practices" data-value="yoga">🤸 Yoga</button>
-        <button class="multi-chip" data-group="practices" data-value="journaling">📓 Journaling</button>
-        <button class="multi-chip" data-group="practices" data-value="breathing">💨 Breathing Exercises</button>
-        <button class="multi-chip" data-group="practices" data-value="none" data-exclusive="true">❌ None</button>
-      </div>
-    </div>
-  </div>
+      const profile = data || {};
+      const derivedName = profile.name || user.user_metadata?.name || '';
+      const derivedGoal = profile.goal || '';
 
-  <!-- ===== STEP 8: HYDRATION ===== -->
-  <div class="step-pane" data-step="8" aria-label="Step 8: Hydration">
-    <div class="input-group">
-      <label class="input-label" id="waterLabel">Current Daily Water Intake</label>
-      <div class="option-cards" role="group" aria-labelledby="waterLabel">
-        <div class="option-card" data-field-card="waterIntake" data-value="less-1L" onclick="selectOptionCard(this,'waterIntake')" tabindex="0">
-          <span class="option-card-icon">😰</span><span class="option-card-title">&lt; 1 Litre</span>
-          <span class="option-card-desc">Consistently dehydrated</span>
-        </div>
-        <div class="option-card" data-field-card="waterIntake" data-value="1-2L" onclick="selectOptionCard(this,'waterIntake')" tabindex="0">
-          <span class="option-card-icon">💧</span><span class="option-card-title">1–2 Litres</span>
-          <span class="option-card-desc">Below recommended level</span>
-        </div>
-        <div class="option-card" data-field-card="waterIntake" data-value="2-3L" onclick="selectOptionCard(this,'waterIntake')" tabindex="0">
-          <span class="option-card-icon">✅</span><span class="option-card-title">2–3 Litres</span>
-          <span class="option-card-desc">Near-optimal hydration</span>
-        </div>
-        <div class="option-card" data-field-card="waterIntake" data-value="3L+" onclick="selectOptionCard(this,'waterIntake')" tabindex="0">
-          <span class="option-card-icon">🏆</span><span class="option-card-title">3+ Litres</span>
-          <span class="option-card-desc">Excellent hydration</span>
-        </div>
-      </div>
-    </div>
+      nameInput.value = derivedName;
+      document.getElementById('age').value = profile.age || '';
+      document.getElementById('activityLevel').value = profile.activityLevel || '';
+      document.getElementById('workoutsPerWeek').value = profile.workoutsPerWeek || '';
+      document.getElementById('experience').value = profile.experience || '';
 
-    <div class="input-group mt-4">
-      <label class="input-label">Water Drinking Challenges</label>
-      <div class="chips-grid" role="group" aria-label="Water drinking challenges">
-        <button class="multi-chip" data-group="waterHabits" data-value="forget">😅 I just forget</button>
-        <button class="multi-chip" data-group="waterHabits" data-value="no-taste">😐 Water is boring</button>
-        <button class="multi-chip" data-group="waterHabits" data-value="prefer-drinks">☕ I prefer coffee/tea</button>
-        <button class="multi-chip" data-group="waterHabits" data-value="busy">⏱️ Too busy</button>
-        <button class="multi-chip" data-group="waterHabits" data-value="no-challenge" data-exclusive="true">✅ No challenge</button>
-      </div>
-    </div>
+      if (derivedGoal) {
+        const matchingGoal = Array.from(onboardingForm.querySelectorAll('input[name="goal"]'))
+          .find((input) => input.value === derivedGoal);
+        if (matchingGoal) {
+          matchingGoal.checked = true;
+        }
+      }
 
-    <div class="input-group mt-4">
-      <label class="input-label" for="f_drinks">What do you typically drink during the day?</label>
-      <input class="input" type="text" id="f_drinks" data-field="dailyDrinks" placeholder="e.g. 3 coffees, 1-2 teas, occasional soda..." />
-    </div>
+      syncGoalSelection();
+    }
 
-    <!-- Final encouragement -->
-    <div class="card" style="background: var(--primary-subtle); border-color: var(--border); text-align: center; margin-top: 28px; padding: 28px;">
-      <div style="font-size: 2rem; margin-bottom: 12px;">🎉</div>
-      <h3>You're all set!</h3>
-      <p class="text-secondary mt-2">Vita is ready to analyze your profile and create your personalized wellness plan. Click <strong>Generate My Report</strong> below.</p>
-      <p class="text-muted text-xs mt-3">Wellness guidance only. Not medical advice; consult a healthcare professional for medical concerns.</p>
-    </div>
-  </div>
+    async function requireSession() {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.auth.getSession();
 
-</main>
+      if (error) {
+        throw error;
+      }
 
-<!-- BOTTOM NAV -->
-<div class="onboard-bottom" role="navigation" aria-label="Step navigation">
-  <button id="prevBtn" class="btn btn-secondary" style="visibility: hidden" aria-label="Previous step">← Back</button>
+      const session = data.session;
 
-  <div class="gen-btn-wrap">
-    <button id="nextBtn" class="btn btn-primary" aria-label="Next step">Next Step →</button>
+      if (!session?.user) {
+        window.location.href = 'index.html';
+        return null;
+      }
 
-    <button id="generateBtn" class="btn btn-primary hidden" aria-label="Generate wellness report">
-      🚀 Generate My Report
-    </button>
-  </div>
-</div>
+      return session.user;
+    }
 
-<!-- Toast -->
-<div id="toast-container" role="status" aria-live="polite"></div>
+    async function saveProfile(event) {
+      event.preventDefault();
+      clearStatus();
 
-<script src="js/theme.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/onboarding.js"></script>
+      if (!validateForm()) {
+        return;
+      }
+
+      setSavingState(true);
+
+      try {
+        const user = await requireSession();
+        if (!user) {
+          return;
+        }
+
+        const supabase = getSupabaseClient();
+        const payload = {
+          id: user.id,
+          name: nameInput.value.trim(),
+          goal: getSelectedGoal()
+        };
+
+        const { error } = await supabase
+          .from('profiles')
+          .upsert(payload, { onConflict: 'id' });
+
+        if (error) {
+          throw error;
+        }
+
+        const successMessage = 'Profile saved successfully.';
+        showStatus(successMessage, 'success');
+        alert(successMessage);
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        console.error('Failed to save onboarding profile:', error);
+        const message = error?.message || 'Something went wrong while saving your profile.';
+        showStatus(message, 'error');
+        alert(message);
+      } finally {
+        setSavingState(false);
+      }
+    }
+
+    goalOptions.forEach((option) => {
+      option.addEventListener('click', () => {
+        const input = option.querySelector('input[name="goal"]');
+        input.checked = true;
+        goalGroup.classList.remove('input-error');
+        clearStatus();
+        syncGoalSelection();
+      });
+    });
+
+    nameInput.addEventListener('input', () => {
+      nameInput.classList.remove('input-error');
+      clearStatus();
+    });
+
+    onboardingForm.addEventListener('submit', saveProfile);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const user = await requireSession();
+        if (!user) {
+          return;
+        }
+
+        await loadExistingProfile(user);
+      } catch (error) {
+        console.error('Unable to initialize onboarding:', error);
+        const message = error?.message || 'Unable to verify your session.';
+        showStatus(message, 'error');
+        alert(message);
+      }
+    });
+  </script>
 </body>
 </html>
