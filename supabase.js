@@ -1,4 +1,0 @@
-const supabaseUrl =  https://tyyflyitcpsuqhbnvyjv.supabase.co
-const supabaseKey = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5eWZseWl0Y3BzdXFoYm52eWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NjkxMDcsImV4cCI6MjA5MTI0NTEwN30.4rTwXx7iDAKs8IX9lL9StlQ_qXbqY8oRr1ktUusJsGo
-
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
