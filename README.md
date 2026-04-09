@@ -42,6 +42,7 @@ OPENROUTER_API_KEY=your-openrouter-api-key
 OPENROUTER_MODEL=google/gemini-2.0-flash-001
 COOKIE_SECURE=false
 APP_URL=http://localhost:3000
+DATA_DIR=./data
 ```
 
 4. Start the app:
@@ -79,6 +80,7 @@ Avoid serverless or ephemeral-filesystem deployments unless you migrate app data
 - `OPENROUTER_MODEL`: OpenRouter model ID used for report generation and chat
 - `APP_URL`: Public app URL sent to OpenRouter as the referer
 - `COOKIE_SECURE`: Set to `true` in production behind HTTPS
+- `DATA_DIR`: Directory where the SQLite database should be stored. Use a persistent disk path in production.
 
 Production will fail fast if `NODE_ENV=production` is set without `JWT_SECRET`.
 

@@ -1,7 +1,11 @@
 const path = require('path');
+const fs = require('fs');
 const Database = require('better-sqlite3');
 
-const dbPath = path.join(process.cwd(), 'data', 'fitnessify.db');
+const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+fs.mkdirSync(dataDir, { recursive: true });
+
+const dbPath = path.join(dataDir, 'fitnessify.db');
 const db = new Database(dbPath);
 
 db.pragma('journal_mode = WAL');
