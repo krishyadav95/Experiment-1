@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/main.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
   <style>
     /* ============ LANDING PAGE STYLES ============ */
 
@@ -711,14 +712,6 @@
 </head>
 
 <body>
-  <h2>Signup</h2>
-
-  <input id="email" placeholder="Email"><br>
-  <input id="password" placeholder="Password"><br>
-  <input id="name" placeholder="Name"><br>
-  <input id="goal" placeholder="Goal"><br>
-
-  <button onclick="handleSignup()">Signup</button>
   <!-- ====== NAVIGATION ====== -->
   <nav class="nav" id="mainNav">
     <a href="index.html" class="nav-logo" aria-label="Fitnessify AI Home">
@@ -1012,17 +1005,27 @@
   <div id="toast-container" role="status" aria-live="polite"></div>
 
   <script src="js/theme.js"></script>
-  <script src="js/auth.js"></script>
   <script>
     // ---- Landing page logic ----
     const authModal = document.getElementById('authModal');
 
+    function reportAuthError(error, fallbackMessage) {
+      const message = error?.message || fallbackMessage;
+      console.error('Auth error:', error);
+      alert(message);
+      return message;
+    }
+
     // Redirect if already logged in
     document.addEventListener('DOMContentLoaded', async () => {
-      const user = await AuthManager.getCurrentUser(true);
-      if (user) {
-        window.location.href = user.onboardingComplete ? 'dashboard.html' : 'onboarding.html';
-        return;
+      try {
+        const user = await AuthManager.getCurrentUser(true);
+        if (user) {
+          window.location.href = user.onboardingComplete ? 'dashboard.html' : 'onboarding.html';
+          return;
+        }
+      } catch (error) {
+        reportAuthError(error, 'Unable to restore your session right now.');
       }
     });
 
@@ -1037,7 +1040,9 @@
 
     // Modal
     function openAuthModal(tab = 'login', source = 'modal') {
-      if (tab === 'signup') AuthManager.trackEvent('signup.started', { source });
+      if (tab === 'signup') {
+        AuthManager.trackEvent('signup.started', { source });
+      }
       authModal.classList.add('active');
       switchTab(tab);
       document.body.style.overflow = 'hidden';
@@ -1084,12 +1089,17 @@
       btn.disabled = true;
 
       try {
-        await AuthManager.signup(name, email, password);
+        const user = await AuthManager.signup(name, email, password);
         closeAuthModal();
-        showToast(`Welcome to Fitnessify AI, ${name}! Let's build your profile.`, 'success');
-        setTimeout(() => { window.location.href = 'onboarding.html'; }, 900);
+        if (user.emailConfirmationRequired) {
+          showToast(`Account created for ${email}. Please verify your email before logging in.`, 'success', 5000);
+          alert('Signup successful. Please check your email and confirm your account before logging in.');
+        } else {
+          showToast(`Welcome to Fitnessify AI, ${name}! Let's build your profile.`, 'success');
+          setTimeout(() => { window.location.href = 'onboarding.html'; }, 900);
+        }
       } catch (err) {
-        errEl.textContent = err.message;
+        errEl.textContent = reportAuthError(err, 'Unable to create your account right now.');
         errEl.classList.add('show');
         btn.classList.remove('btn-loading');
         btn.textContent = 'Create Account →';
@@ -1124,7 +1134,7 @@
           window.location.href = user.onboardingComplete ? 'dashboard.html' : 'onboarding.html';
         }, 700);
       } catch (err) {
-        errEl.textContent = err.message;
+        errEl.textContent = reportAuthError(err, 'Unable to log in right now.');
         errEl.classList.add('show');
         btn.classList.remove('btn-loading');
         btn.textContent = 'Login →';
@@ -1136,7 +1146,6 @@
     document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
     document.getElementById('signupPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
   </script>
-  <script src="supabase.js"></script>
 </body>
 
 </html>
