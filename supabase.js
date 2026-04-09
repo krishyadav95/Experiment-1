@@ -17,8 +17,8 @@ function getSupabaseClient() {
   return supabaseClientInstance;
 }
 
-function normalizeAuthError(error, fallbackMessage) {
-  console.error('Supabase request failed:', error);
+function normalizeError(error, fallbackMessage) {
+  console.error('Supabase error:', error);
 
   if (!navigator.onLine) {
     return new Error('You appear to be offline. Please reconnect and try again.');
@@ -31,51 +31,37 @@ function normalizeAuthError(error, fallbackMessage) {
   return new Error(fallbackMessage);
 }
 
-function isMissingSessionError(error) {
-  return error?.name === 'AuthSessionMissingError' || /auth session missing/i.test(error?.message || '');
-}
-
-async function ensureProfile(user, profile = {}) {
-  const supabase = getSupabaseClient();
-  const payload = {
-    id: user.id,
-    email: user.email,
-    name: profile.name || user.user_metadata?.name || ''
-  };
-
-  const { error } = await supabase
-    .from('profiles')
-    .upsert(payload, { onConflict: 'id' });
-
-  if (error) {
-    console.warn('Profile upsert skipped:', error);
+function resolveOnboardingComplete(profile) {
+  if (!profile) {
+    return false;
   }
 
-  return payload;
-}
-
-async function loadUserProfile(user) {
-  const supabase = getSupabaseClient();
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (error) {
-    console.warn('Profile lookup skipped:', error);
+  if (typeof profile.onboardingComplete === 'boolean') {
+    return profile.onboardingComplete;
   }
 
-  const mergedUser = {
-    id: user.id,
-    email: user.email,
-    name: data?.name || user.user_metadata?.name || user.email,
-    onboardingComplete: Boolean(data?.onboardingComplete ?? data?.onboarding_complete),
-    profile: data || null
-  };
+  if (typeof profile.onboarding_complete === 'boolean') {
+    return profile.onboarding_complete;
+  }
 
-  currentUserCache = mergedUser;
-  return mergedUser;
+  return Boolean(
+    profile.name &&
+    profile.age &&
+    profile.gender &&
+    profile.height &&
+    profile.weight &&
+    profile.goal
+  );
+}
+
+function mapUserWithProfile(sessionUser, profile) {
+  return {
+    id: sessionUser.id,
+    email: sessionUser.email || '',
+    name: profile?.name || sessionUser.user_metadata?.name || sessionUser.email || 'User',
+    onboardingComplete: resolveOnboardingComplete(profile),
+    profile: profile || null
+  };
 }
 
 async function getSession() {
@@ -83,10 +69,47 @@ async function getSession() {
   const { data, error } = await supabase.auth.getSession();
 
   if (error) {
-    throw normalizeAuthError(error, 'Unable to check your session.');
+    throw normalizeError(error, 'Unable to check your session.');
   }
 
   return data.session || null;
+}
+
+async function getProfileByUserId(userId) {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (error) {
+    throw normalizeError(error, 'Unable to load your profile.');
+  }
+
+  return data || null;
+}
+
+async function upsertProfileForUser(user, profileData = {}) {
+  const supabase = getSupabaseClient();
+  const payload = {
+    id: user.id,
+    email: user.email || '',
+    ...profileData
+  };
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .upsert(payload, { onConflict: 'id' })
+    .select()
+    .single();
+
+  if (error) {
+    throw normalizeError(error, 'Unable to save your profile.');
+  }
+
+  currentUserCache = mapUserWithProfile(user, data);
+  return currentUserCache;
 }
 
 async function signUp(email, password, metadata = {}) {
@@ -100,7 +123,7 @@ async function signUp(email, password, metadata = {}) {
   });
 
   if (error) {
-    throw normalizeAuthError(error, 'Unable to create your account.');
+    throw normalizeError(error, 'Unable to create your account.');
   }
 
   return data;
@@ -114,7 +137,7 @@ async function signIn(email, password) {
   });
 
   if (error) {
-    throw normalizeAuthError(error, 'Unable to log in.');
+    throw normalizeError(error, 'Unable to log in.');
   }
 
   return data;
@@ -125,7 +148,7 @@ async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    throw normalizeAuthError(error, 'Unable to log out.');
+    throw normalizeError(error, 'Unable to log out.');
   }
 
   currentUserCache = null;
@@ -133,50 +156,47 @@ async function signOut() {
 
 const AuthManager = {
   async signup(name, email, password) {
-    try {
-      const data = await signUp(email, password, { name });
-      const user = data.user;
+    const data = await signUp(email, password, { name });
+    const user = data.user;
 
-      if (!user) {
-        throw new Error('Signup succeeded, but no user was returned.');
-      }
-
-      if (!data.session) {
-        currentUserCache = null;
-        return {
-          id: user.id,
-          email: user.email,
-          name,
-          onboardingComplete: false,
-          profile: null,
-          emailConfirmationRequired: true
-        };
-      }
-
-      await ensureProfile(user, { name });
-      const profileUser = await loadUserProfile(user);
-      return {
-        ...profileUser,
-        emailConfirmationRequired: false
-      };
-    } catch (error) {
-      throw normalizeAuthError(error, 'Signup failed.');
+    if (!user) {
+      throw new Error('Signup succeeded, but no user was returned.');
     }
+
+    if (!data.session) {
+      currentUserCache = null;
+      return {
+        id: user.id,
+        email: user.email || email,
+        name,
+        onboardingComplete: false,
+        profile: null,
+        emailConfirmationRequired: true
+      };
+    }
+
+    await upsertProfileForUser(user, { name });
+    const profile = await getProfileByUserId(user.id);
+    const mappedUser = mapUserWithProfile(user, profile);
+    currentUserCache = mappedUser;
+
+    return {
+      ...mappedUser,
+      emailConfirmationRequired: false
+    };
   },
 
   async login(email, password) {
-    try {
-      const data = await signIn(email, password);
-      const user = data.user;
+    const data = await signIn(email, password);
+    const sessionUser = data.user;
 
-      if (!user) {
-        throw new Error('Login succeeded, but no user was returned.');
-      }
-
-      return loadUserProfile(user);
-    } catch (error) {
-      throw normalizeAuthError(error, 'Login failed.');
+    if (!sessionUser) {
+      throw new Error('Login succeeded, but no user was returned.');
     }
+
+    const profile = await getProfileByUserId(sessionUser.id);
+    currentUserCache = mapUserWithProfile(sessionUser, profile);
+    return currentUserCache;
   },
 
   async logout() {
@@ -189,72 +209,61 @@ const AuthManager = {
       return currentUserCache;
     }
 
-    try {
-      const session = await getSession();
+    const session = await getSession();
 
-      if (!session?.user) {
-        currentUserCache = null;
-        return null;
-      }
-
-      return loadUserProfile(session.user);
-    } catch (error) {
-      if (isMissingSessionError(error)) {
-        currentUserCache = null;
-        return null;
-      }
-
-      throw normalizeAuthError(error, 'Unable to check your session.');
+    if (!session?.user) {
+      currentUserCache = null;
+      return null;
     }
+
+    const profile = await getProfileByUserId(session.user.id);
+    currentUserCache = mapUserWithProfile(session.user, profile);
+    return currentUserCache;
   },
 
   async requireAuth(redirectTo = 'index.html') {
     const user = await this.getCurrentUser(true);
+
     if (!user) {
       window.location.href = redirectTo;
       return null;
     }
+
     return user;
   },
 
   async updateProfile(profileData, onboardingComplete = false) {
+    const session = await getSession();
+
+    if (!session?.user) {
+      throw new Error('You must be logged in to update your profile.');
+    }
+
+    const payload = {
+      ...profileData
+    };
+
+    if (onboardingComplete) {
+      payload.onboardingComplete = true;
+    }
+
+    return upsertProfileForUser(session.user, payload);
+  },
+
+  async setOnboardingComplete() {
     const user = await this.getCurrentUser(true);
 
     if (!user) {
       throw new Error('You must be logged in to update your profile.');
     }
 
-    const supabase = getSupabaseClient();
-    const payload = {
-      id: user.id,
-      email: user.email,
-      ...profileData,
-      onboardingComplete
-    };
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .upsert(payload, { onConflict: 'id' })
-      .select()
-      .single();
-
-    if (error) {
-      throw normalizeAuthError(error, 'Unable to save your profile.');
-    }
-
-    currentUserCache = {
-      ...user,
-      name: data?.name || user.name,
-      onboardingComplete: Boolean(data?.onboardingComplete),
-      profile: data
-    };
-
-    return currentUserCache;
-  },
-
-  async setOnboardingComplete() {
-    const user = await this.getCurrentUser(true);
-    return this.updateProfile(user?.profile || {}, true);
+    return upsertProfileForUser(
+      { id: user.id, email: user.email, user_metadata: { name: user.name } },
+      {
+        ...(user.profile || {}),
+        onboardingComplete: true
+      }
+    );
   },
 
   async isLoggedIn(force = false) {
@@ -276,8 +285,18 @@ const AuthManager = {
 
   async setCheckInFrequency(freq) {
     const user = await this.getCurrentUser(true);
-    const profile = user?.profile || {};
-    return this.updateProfile({ ...profile, checkInFrequency: freq }, user?.onboardingComplete || false);
+
+    if (!user) {
+      throw new Error('You must be logged in to update your profile.');
+    }
+
+    return this.updateProfile(
+      {
+        ...(user.profile || {}),
+        checkInFrequency: freq
+      },
+      user.onboardingComplete
+    );
   },
 
   async getAiStatus() {
@@ -292,10 +311,12 @@ const AuthManager = {
     return Promise.resolve();
   },
 
-  getSession
+  getSession,
+  getProfileByUserId,
+  upsertProfileForUser
 };
 
 window.getSupabaseClient = getSupabaseClient;
+window.AuthManager = AuthManager;
 window.signUp = signUp;
 window.signIn = signIn;
-window.AuthManager = AuthManager;

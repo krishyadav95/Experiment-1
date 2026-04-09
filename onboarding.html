@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080A18" />
-  <title>Complete Your Onboarding — Fitnessify AI</title>
+  <title>Your Fitness Onboarding — Fitnessify AI</title>
   <meta
     name="description"
-    content="Tell Fitnessify AI a little about yourself so we can personalize your fitness experience."
+    content="Complete your personalized onboarding so Fitnessify AI can tailor your dashboard to your body, goals, and routine."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,8 +15,9 @@
   <style>
     body {
       background:
-        radial-gradient(circle at top, rgba(67, 97, 238, 0.18), transparent 32%),
-        linear-gradient(180deg, var(--bg-surface) 0%, var(--bg) 42%, var(--bg) 100%);
+        radial-gradient(circle at top left, rgba(108, 99, 255, 0.2), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(0, 217, 167, 0.16), transparent 30%),
+        var(--bg);
       min-height: 100vh;
     }
 
@@ -24,26 +25,25 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      height: 64px;
-      padding: 0 24px;
       background: var(--bg-nav);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .onboard-logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--text-primary);
-      text-decoration: none;
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 1.0625rem;
+      color: var(--text-primary);
+      text-decoration: none;
     }
 
     .logo-mark {
@@ -56,38 +56,40 @@
     }
 
     .onboard-shell {
-      width: min(100%, 1180px);
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 32px 24px 120px;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 0.95fr 1.05fr;
       gap: 28px;
       align-items: start;
     }
 
-    .hero-card,
-    .form-card {
-      background: color-mix(in srgb, var(--bg-card) 86%, transparent);
+    .intro-card,
+    .wizard-card {
+      background: color-mix(in srgb, var(--bg-card) 88%, transparent);
       border: 1px solid var(--border);
-      border-radius: 28px;
-      box-shadow: var(--shadow-soft);
+      border-radius: 30px;
       backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-soft);
     }
 
-    .hero-card {
-      padding: 36px;
+    .intro-card {
       position: sticky;
       top: 96px;
+      padding: 34px;
       overflow: hidden;
     }
 
-    .hero-card::after {
+    .intro-card::after {
       content: "";
       position: absolute;
-      inset: auto -10% -20% auto;
+      right: -60px;
+      bottom: -60px;
       width: 220px;
       height: 220px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 65%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 217, 167, 0.22), transparent 68%);
       pointer-events: none;
     }
 
@@ -95,52 +97,52 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 7px 14px;
+      padding: 8px 14px;
+      margin-bottom: 20px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--primary-subtle);
       color: var(--primary);
       font-size: 0.8125rem;
       font-weight: 700;
-      margin-bottom: 18px;
     }
 
-    .hero-title {
-      font-size: clamp(2rem, 5vw, 3.2rem);
+    .intro-title {
+      font-size: clamp(2rem, 5vw, 3.1rem);
       line-height: 1.02;
       margin-bottom: 14px;
     }
 
-    .hero-subtitle {
+    .intro-copy {
       color: var(--text-secondary);
       font-size: 1rem;
       line-height: 1.7;
       margin-bottom: 28px;
-      max-width: 40ch;
+      max-width: 36ch;
     }
 
-    .benefit-list {
+    .insight-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
       display: grid;
       gap: 14px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
     }
 
-    .benefit-item {
+    .insight-item {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: flex-start;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: color-mix(in srgb, var(--bg-surface) 82%, transparent);
+      padding: 16px;
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--bg-surface) 84%, transparent);
       border: 1px solid var(--border);
     }
 
-    .benefit-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
+    .insight-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
       background: var(--primary-subtle);
@@ -149,85 +151,156 @@
       flex-shrink: 0;
     }
 
-    .benefit-copy strong {
+    .insight-item strong {
       display: block;
       margin-bottom: 4px;
       font-size: 0.95rem;
     }
 
-    .benefit-copy span {
-      display: block;
+    .insight-item span {
       color: var(--text-secondary);
       font-size: 0.875rem;
-      line-height: 1.5;
+      line-height: 1.55;
+      display: block;
     }
 
-    .form-card {
-      padding: 32px;
+    .wizard-card {
+      padding: 30px;
     }
 
-    .form-header {
-      margin-bottom: 26px;
+    .wizard-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .form-title {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      margin-bottom: 8px;
+    .wizard-copy h1 {
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      margin-bottom: 6px;
     }
 
-    .form-subtitle {
+    .wizard-copy p {
       color: var(--text-secondary);
       line-height: 1.6;
     }
 
-    .onboarding-form {
-      display: grid;
-      gap: 18px;
+    .step-pill {
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .progress-track-wrap {
+      margin-bottom: 26px;
+    }
+
+    .progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--border-solid);
+      transition: var(--transition);
+    }
+
+    .progress-dot.active {
+      width: 28px;
+      background: var(--primary);
+    }
+
+    .progress-dot.completed {
+      background: var(--accent);
+    }
+
+    .step-pane {
+      display: none;
+      animation: fadeUp 0.35s var(--ease) both;
+    }
+
+    .step-pane.active {
+      display: block;
+    }
+
+    .pane-header {
+      margin-bottom: 20px;
+    }
+
+    .pane-header h2 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .pane-header p {
+      color: var(--text-secondary);
+      line-height: 1.6;
     }
 
     .input-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
     }
 
-    .goal-grid {
+    .choice-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .goal-option {
+    .choice-card {
       position: relative;
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 16px;
+      flex-direction: column;
+      gap: 6px;
+      padding: 18px 16px;
+      border-radius: 20px;
       border: 1.5px solid var(--border-solid);
-      border-radius: 18px;
       background: var(--bg-card);
-      cursor: pointer;
       transition: var(--transition);
+      cursor: pointer;
+      min-height: 132px;
     }
 
-    .goal-option:hover {
+    .choice-card:hover {
       border-color: var(--primary);
       background: var(--primary-subtle);
     }
 
-    .goal-option.selected {
+    .choice-card.selected {
       border-color: var(--primary);
       background: var(--primary-subtle);
       box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
-    .goal-option input {
+    .choice-card input {
       position: absolute;
       opacity: 0;
       pointer-events: none;
     }
 
-    .goal-icon {
+    .choice-icon {
       width: 42px;
       height: 42px;
       border-radius: 14px;
@@ -235,38 +308,59 @@
       place-items: center;
       background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
       font-size: 1.1rem;
-      flex-shrink: 0;
+      margin-bottom: 2px;
     }
 
-    .goal-copy strong {
-      display: block;
-      margin-bottom: 4px;
+    .choice-title {
+      font-weight: 700;
       font-size: 0.9375rem;
     }
 
-    .goal-copy span {
-      display: block;
+    .choice-desc {
       color: var(--text-secondary);
       font-size: 0.8125rem;
       line-height: 1.5;
     }
 
-    .helper-text {
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      line-height: 1.5;
-      margin-top: -6px;
+    .step-hint {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--primary-subtle) 76%, transparent);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .wizard-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      margin-top: 26px;
+      padding-top: 20px;
+      background: linear-gradient(180deg, rgba(8, 10, 24, 0) 0%, color-mix(in srgb, var(--bg-card) 96%, transparent) 20%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .actions-left,
+    .actions-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .status-banner {
       display: none;
+      margin-top: 16px;
       padding: 14px 16px;
-      border-radius: 16px;
+      border-radius: 18px;
       border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-secondary);
       font-size: 0.875rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .status-banner.show {
@@ -274,74 +368,72 @@
     }
 
     .status-banner.error {
-      border-color: rgba(239, 68, 68, 0.28);
+      border-color: rgba(239, 68, 68, 0.3);
       background: rgba(127, 29, 29, 0.18);
       color: #fecaca;
     }
 
     .status-banner.success {
-      border-color: rgba(16, 185, 129, 0.28);
-      background: rgba(6, 78, 59, 0.18);
+      border-color: rgba(0, 217, 167, 0.3);
+      background: rgba(4, 120, 87, 0.18);
       color: #bbf7d0;
     }
 
-    .form-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .form-note {
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      line-height: 1.5;
+    .hidden {
+      display: none !important;
     }
 
     .input.input-error,
-    .goal-group.input-error {
+    .choice-group.input-error {
       border-color: var(--error);
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-      border-radius: 18px;
+      border-radius: 20px;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 1040px) {
       .onboard-shell {
         grid-template-columns: 1fr;
       }
 
-      .hero-card {
+      .intro-card {
         position: relative;
         top: 0;
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       .onboard-nav {
-        padding-inline: 18px;
+        padding: 0 18px;
       }
 
       .onboard-shell {
-        padding: 24px 16px 56px;
+        padding: 22px 16px 100px;
       }
 
-      .hero-card,
-      .form-card {
+      .intro-card,
+      .wizard-card {
         padding: 24px;
-        border-radius: 22px;
+        border-radius: 24px;
+      }
+
+      .wizard-top,
+      .wizard-actions {
+        flex-direction: column;
+        align-items: stretch;
       }
 
       .input-grid,
-      .goal-grid,
-      .form-actions {
+      .choice-grid {
         grid-template-columns: 1fr;
       }
 
-      .form-actions {
-        display: grid;
+      .actions-left,
+      .actions-right {
+        width: 100%;
       }
 
-      .form-actions .btn {
+      .actions-left .btn,
+      .actions-right .btn {
         width: 100%;
       }
     }
@@ -357,168 +449,237 @@
   </nav>
 
   <main class="onboard-shell">
-    <section class="hero-card" aria-labelledby="heroTitle">
-      <div class="eyebrow">Personalized onboarding</div>
-      <h1 class="hero-title" id="heroTitle">Let&apos;s build a profile that fits your routine.</h1>
-      <p class="hero-subtitle">
-        We&apos;ll use your basic details and primary goal to shape your dashboard, coaching prompts, and recommendations.
+    <section class="intro-card" aria-labelledby="introTitle">
+      <div class="eyebrow">Advanced onboarding</div>
+      <h1 class="intro-title" id="introTitle">We tailor your dashboard around your body, goal, and daily rhythm.</h1>
+      <p class="intro-copy">
+        This setup goes beyond basic signup. It gives us enough context to personalize the dashboard instead of dropping you into a blank generic experience.
       </p>
 
-      <ul class="benefit-list">
-        <li class="benefit-item">
-          <div class="benefit-icon">01</div>
-          <div class="benefit-copy">
-            <strong>Start with the essentials</strong>
-            <span>Your name and fitness goal are enough to get you into the product quickly.</span>
+      <ul class="insight-list">
+        <li class="insight-item">
+          <div class="insight-icon">👤</div>
+          <div>
+            <strong>Body profile</strong>
+            <span>Age, gender, height, and weight help anchor the basics and make the dashboard feel personal from day one.</span>
           </div>
         </li>
-        <li class="benefit-item">
-          <div class="benefit-icon">02</div>
-          <div class="benefit-copy">
-            <strong>Personalize the first dashboard</strong>
-            <span>Optional details like age, activity level, and workout frequency help tailor the experience.</span>
+        <li class="insight-item">
+          <div class="insight-icon">🎯</div>
+          <div>
+            <strong>Goal clarity</strong>
+            <span>We use your primary outcome and experience level to shape the tone and focus of your plan.</span>
           </div>
         </li>
-        <li class="benefit-item">
-          <div class="benefit-icon">03</div>
-          <div class="benefit-copy">
-            <strong>Pick up where you left off</strong>
-            <span>If you&apos;ve already started onboarding, we&apos;ll prefill what we find in your profile.</span>
+        <li class="insight-item">
+          <div class="insight-icon">🗓️</div>
+          <div>
+            <strong>Real-life routine</strong>
+            <span>Diet, activity, routine, and sleep help us fit recommendations into your actual day instead of idealized assumptions.</span>
           </div>
         </li>
       </ul>
     </section>
 
-    <section class="form-card" aria-labelledby="formTitle">
-      <div class="form-header">
-        <h2 class="form-title" id="formTitle">Complete your onboarding</h2>
-        <p class="form-subtitle">
-          This takes less than a minute. We&apos;ll save your profile and send you straight to your dashboard.
-        </p>
+    <section class="wizard-card" aria-labelledby="wizardTitle">
+      <div class="wizard-top">
+        <div class="wizard-copy">
+          <h1 id="wizardTitle">Complete your onboarding</h1>
+          <p>Three focused steps, then we save your profile and take you straight to the dashboard.</p>
+        </div>
+        <div class="step-pill" id="stepPill">Step 1 of 3</div>
       </div>
 
-      <div id="statusBanner" class="status-banner" role="status" aria-live="polite"></div>
-
-      <form id="onboardingForm" class="onboarding-form" novalidate>
-        <div class="input-group">
-          <label class="input-label" for="name">Full Name <span aria-hidden="true">*</span></label>
-          <input
-            class="input"
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter your full name"
-            autocomplete="name"
-            required
-          />
+      <div class="progress-track-wrap">
+        <div class="progress-meta">
+          <span id="progressLabel">Personal details</span>
+          <div class="progress-dots" aria-hidden="true">
+            <span class="progress-dot active" data-dot="1"></span>
+            <span class="progress-dot" data-dot="2"></span>
+            <span class="progress-dot" data-dot="3"></span>
+          </div>
         </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width: 33.33%"></div>
+        </div>
+      </div>
 
-        <div class="input-group goal-group" id="goalGroup">
-          <label class="input-label">Fitness Goal <span aria-hidden="true">*</span></label>
-          <div class="goal-grid" role="radiogroup" aria-label="Fitness goal">
-            <label class="goal-option" data-goal-option>
-              <input type="radio" name="goal" value="Lose Weight" />
-              <span class="goal-icon">⚖️</span>
-              <span class="goal-copy">
-                <strong>Lose Weight</strong>
-                <span>Build healthier routines with steady progress.</span>
-              </span>
-            </label>
+      <form id="onboardingForm" novalidate>
+        <div class="step-pane active" data-step="1">
+          <div class="pane-header">
+            <h2>Your baseline</h2>
+            <p>Let&apos;s capture the personal details that anchor your profile.</p>
+          </div>
 
-            <label class="goal-option" data-goal-option>
-              <input type="radio" name="goal" value="Build Muscle" />
-              <span class="goal-icon">💪</span>
-              <span class="goal-copy">
-                <strong>Build Muscle</strong>
-                <span>Focus on strength, recovery, and consistency.</span>
-              </span>
-            </label>
+          <div class="input-grid">
+            <div class="input-group">
+              <label class="input-label" for="name">Name <span aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="name" placeholder="Your full name" autocomplete="name" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="age">Age <span aria-hidden="true">*</span></label>
+              <input class="input" type="number" id="age" min="13" max="100" placeholder="25" required />
+            </div>
+          </div>
 
-            <label class="goal-option" data-goal-option>
-              <input type="radio" name="goal" value="Improve Endurance" />
-              <span class="goal-icon">🏃</span>
-              <span class="goal-copy">
-                <strong>Improve Endurance</strong>
-                <span>Increase stamina for cardio and everyday energy.</span>
-              </span>
-            </label>
+          <div class="input-grid">
+            <div class="input-group choice-group" id="genderGroup">
+              <label class="input-label">Gender <span aria-hidden="true">*</span></label>
+              <div class="choice-grid">
+                <label class="choice-card" data-choice>
+                  <input type="radio" name="gender" value="male" />
+                  <span class="choice-icon">♂️</span>
+                  <span class="choice-title">Male</span>
+                  <span class="choice-desc">Personalize the profile around your baseline.</span>
+                </label>
+                <label class="choice-card" data-choice>
+                  <input type="radio" name="gender" value="female" />
+                  <span class="choice-icon">♀️</span>
+                  <span class="choice-title">Female</span>
+                  <span class="choice-desc">Use this to shape personalized context.</span>
+                </label>
+                <label class="choice-card" data-choice>
+                  <input type="radio" name="gender" value="other" />
+                  <span class="choice-icon">✨</span>
+                  <span class="choice-title">Other</span>
+                  <span class="choice-desc">Choose the option that fits you best.</span>
+                </label>
+              </div>
+            </div>
+          </div>
 
-            <label class="goal-option" data-goal-option>
-              <input type="radio" name="goal" value="Stay Healthy" />
-              <span class="goal-icon">🌿</span>
-              <span class="goal-copy">
-                <strong>Stay Healthy</strong>
-                <span>Maintain a balanced routine and feel your best.</span>
-              </span>
-            </label>
+          <div class="input-grid">
+            <div class="input-group">
+              <label class="input-label" for="height">Height (cm) <span aria-hidden="true">*</span></label>
+              <input class="input" type="number" id="height" min="100" max="250" placeholder="170" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="weight">Weight (kg) <span aria-hidden="true">*</span></label>
+              <input class="input" type="number" id="weight" min="30" max="300" placeholder="68" required />
+            </div>
+          </div>
+
+          <div class="step-hint">
+            These fields drive your headline dashboard summary and help us avoid a blank first experience after onboarding.
           </div>
         </div>
 
-        <div class="input-grid">
-          <div class="input-group">
-            <label class="input-label" for="age">Age</label>
-            <input
-              class="input"
-              type="number"
-              id="age"
-              name="age"
-              min="13"
-              max="100"
-              placeholder="25"
-              inputmode="numeric"
-            />
+        <div class="step-pane" data-step="2">
+          <div class="pane-header">
+            <h2>Your training profile</h2>
+            <p>Tell us what you want to achieve and how active you are right now.</p>
           </div>
 
-          <div class="input-group">
-            <label class="input-label" for="activityLevel">Activity Level</label>
-            <select class="input" id="activityLevel" name="activityLevel">
-              <option value="">Select one</option>
-              <option value="beginner">Beginner</option>
-              <option value="light">Lightly active</option>
-              <option value="moderate">Moderately active</option>
-              <option value="very-active">Very active</option>
-            </select>
+          <div class="input-group choice-group" id="goalGroup">
+            <label class="input-label">Fitness Goal <span aria-hidden="true">*</span></label>
+            <div class="choice-grid">
+              <label class="choice-card" data-choice>
+                <input type="radio" name="goal" value="fat loss" />
+                <span class="choice-icon">🔥</span>
+                <span class="choice-title">Fat loss</span>
+                <span class="choice-desc">Reduce body fat while building sustainable habits.</span>
+              </label>
+              <label class="choice-card" data-choice>
+                <input type="radio" name="goal" value="muscle gain" />
+                <span class="choice-icon">💪</span>
+                <span class="choice-title">Muscle gain</span>
+                <span class="choice-desc">Focus on strength, recovery, and progressive training.</span>
+              </label>
+              <label class="choice-card" data-choice>
+                <input type="radio" name="goal" value="maintenance" />
+                <span class="choice-icon">⚖️</span>
+                <span class="choice-title">Maintenance</span>
+                <span class="choice-desc">Stay healthy, consistent, and balanced long term.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-group">
+              <label class="input-label" for="activityLevel">Activity Level <span aria-hidden="true">*</span></label>
+              <select class="input" id="activityLevel" required>
+                <option value="">Select activity level</option>
+                <option value="sedentary">Sedentary</option>
+                <option value="moderate">Moderate</option>
+                <option value="active">Active</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="experience">Workout Experience <span aria-hidden="true">*</span></label>
+              <select class="input" id="experience" required>
+                <option value="">Select experience</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="step-hint">
+            This is the part that lets the dashboard speak to your current level instead of assuming everyone starts the same way.
           </div>
         </div>
 
-        <div class="input-grid">
-          <div class="input-group">
-            <label class="input-label" for="workoutsPerWeek">Workouts Per Week</label>
-            <input
-              class="input"
-              type="number"
-              id="workoutsPerWeek"
-              name="workoutsPerWeek"
-              min="0"
-              max="14"
-              placeholder="3"
-              inputmode="numeric"
-            />
+        <div class="step-pane" data-step="3">
+          <div class="pane-header">
+            <h2>Your day-to-day lifestyle</h2>
+            <p>These details help us make recommendations that fit your routine instead of fighting it.</p>
           </div>
 
-          <div class="input-group">
-            <label class="input-label" for="experience">Training Experience</label>
-            <select class="input" id="experience" name="experience">
-              <option value="">Select one</option>
-              <option value="new">New to fitness</option>
-              <option value="returning">Returning after a break</option>
-              <option value="consistent">Already consistent</option>
-            </select>
+          <div class="input-grid">
+            <div class="input-group">
+              <label class="input-label" for="diet">Diet Preference <span aria-hidden="true">*</span></label>
+              <select class="input" id="diet" required>
+                <option value="">Select diet preference</option>
+                <option value="veg">Veg</option>
+                <option value="non-veg">Non-veg</option>
+                <option value="vegan">Vegan</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="routine">Daily Routine <span aria-hidden="true">*</span></label>
+              <select class="input" id="routine" required>
+                <option value="">Select daily routine</option>
+                <option value="student">Student</option>
+                <option value="working">Working</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-group">
+              <label class="input-label" for="sleep">Sleep Hours <span aria-hidden="true">*</span></label>
+              <input class="input" type="number" id="sleep" min="3" max="12" step="0.5" placeholder="7.5" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="lifestyleNotes">Lifestyle Notes</label>
+              <input
+                class="input"
+                type="text"
+                id="lifestyleNotes"
+                placeholder="e.g. desk job, evening workouts, college schedule"
+              />
+            </div>
+          </div>
+
+          <div class="step-hint">
+            You asked for richer personalization, so this step captures the context that actually affects adherence: food style, daily rhythm, and recovery.
           </div>
         </div>
 
-        <p class="helper-text">
-          Required fields are saved to the <code>profiles</code> table. Optional details are included so this page feels like a real onboarding step and can be extended later.
-        </p>
+        <div id="statusBanner" class="status-banner" role="status" aria-live="polite"></div>
 
-        <div class="form-actions">
-          <button type="submit" id="saveButton" class="btn btn-primary">Save and Continue</button>
-          <a href="index.html" class="btn btn-secondary">Back to Home</a>
+        <div class="wizard-actions">
+          <div class="actions-left">
+            <button type="button" id="backButton" class="btn btn-secondary" style="visibility: hidden;">← Back</button>
+          </div>
+          <div class="actions-right">
+            <a href="index.html" class="btn btn-ghost">Cancel</a>
+            <button type="button" id="nextButton" class="btn btn-primary">Next Step →</button>
+            <button type="submit" id="submitButton" class="btn btn-primary hidden">Save and Continue</button>
+          </div>
         </div>
-
-        <p class="form-note">
-          Wellness guidance only. Not medical advice; consult a healthcare professional for medical concerns.
-        </p>
       </form>
     </section>
   </main>
@@ -527,12 +688,23 @@
   <script src="supabase.js"></script>
   <script src="js/theme.js"></script>
   <script>
-    const onboardingForm = document.getElementById('onboardingForm');
-    const nameInput = document.getElementById('name');
-    const goalGroup = document.getElementById('goalGroup');
-    const saveButton = document.getElementById('saveButton');
+    const TOTAL_STEPS = 3;
+    let currentStep = 1;
+
+    const form = document.getElementById('onboardingForm');
+    const stepPill = document.getElementById('stepPill');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressFill = document.getElementById('progressFill');
+    const backButton = document.getElementById('backButton');
+    const nextButton = document.getElementById('nextButton');
+    const submitButton = document.getElementById('submitButton');
     const statusBanner = document.getElementById('statusBanner');
-    const goalOptions = Array.from(document.querySelectorAll('[data-goal-option]'));
+
+    const stepLabels = {
+      1: 'Personal details',
+      2: 'Training profile',
+      3: 'Lifestyle routine'
+    };
 
     function showStatus(message, type = 'error') {
       statusBanner.textContent = message;
@@ -544,179 +716,285 @@
       statusBanner.className = 'status-banner';
     }
 
-    function getSelectedGoal() {
-      const selectedInput = onboardingForm.querySelector('input[name="goal"]:checked');
-      return selectedInput ? selectedInput.value : '';
+    function getSelectedValue(name) {
+      const input = form.querySelector(`input[name="${name}"]:checked`);
+      return input ? input.value : '';
     }
 
-    function syncGoalSelection() {
-      const selectedGoal = getSelectedGoal();
-      goalOptions.forEach((option) => {
-        const input = option.querySelector('input[name="goal"]');
-        option.classList.toggle('selected', input.value === selectedGoal);
+    function syncChoiceCards() {
+      document.querySelectorAll('[data-choice]').forEach((card) => {
+        const input = card.querySelector('input');
+        card.classList.toggle('selected', Boolean(input?.checked));
       });
     }
 
-    function setSavingState(isSaving) {
-      saveButton.disabled = isSaving;
-      saveButton.classList.toggle('btn-loading', isSaving);
-      saveButton.textContent = isSaving ? '' : 'Save and Continue';
+    function updateProgress() {
+      stepPill.textContent = `Step ${currentStep} of ${TOTAL_STEPS}`;
+      progressLabel.textContent = stepLabels[currentStep];
+      progressFill.style.width = `${(currentStep / TOTAL_STEPS) * 100}%`;
+
+      document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+        const step = index + 1;
+        dot.classList.toggle('active', step === currentStep);
+        dot.classList.toggle('completed', step < currentStep);
+      });
+
+      document.querySelectorAll('.step-pane').forEach((pane) => {
+        pane.classList.toggle('active', Number(pane.dataset.step) === currentStep);
+      });
+
+      backButton.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+      nextButton.classList.toggle('hidden', currentStep === TOTAL_STEPS);
+      submitButton.classList.toggle('hidden', currentStep !== TOTAL_STEPS);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function validateForm() {
-      let isValid = true;
-      const selectedGoal = getSelectedGoal();
-
-      nameInput.classList.remove('input-error');
-      goalGroup.classList.remove('input-error');
-
-      if (!nameInput.value.trim()) {
-        nameInput.classList.add('input-error');
-        isValid = false;
+    function markFieldError(element, hasError) {
+      if (!element) {
+        return;
       }
 
-      if (!selectedGoal) {
-        goalGroup.classList.add('input-error');
-        isValid = false;
+      element.classList.toggle('input-error', hasError);
+    }
+
+    function validateStep(step) {
+      clearStatus();
+
+      let valid = true;
+
+      if (step === 1) {
+        const stepFields = [
+          document.getElementById('name'),
+          document.getElementById('age'),
+          document.getElementById('height'),
+          document.getElementById('weight')
+        ];
+
+        stepFields.forEach((field) => {
+          const isEmpty = !field.value.trim();
+          markFieldError(field, isEmpty);
+          if (isEmpty) {
+            valid = false;
+          }
+        });
+
+        const genderGroup = document.getElementById('genderGroup');
+        const hasGender = Boolean(getSelectedValue('gender'));
+        genderGroup.classList.toggle('input-error', !hasGender);
+        if (!hasGender) {
+          valid = false;
+        }
       }
 
-      if (!isValid) {
-        const message = 'Please enter your name and choose a fitness goal.';
+      if (step === 2) {
+        const hasGoal = Boolean(getSelectedValue('goal'));
+        const goalGroup = document.getElementById('goalGroup');
+        goalGroup.classList.toggle('input-error', !hasGoal);
+        if (!hasGoal) {
+          valid = false;
+        }
+
+        ['activityLevel', 'experience'].forEach((id) => {
+          const field = document.getElementById(id);
+          const isEmpty = !field.value;
+          markFieldError(field, isEmpty);
+          if (isEmpty) {
+            valid = false;
+          }
+        });
+      }
+
+      if (step === 3) {
+        ['diet', 'routine', 'sleep'].forEach((id) => {
+          const field = document.getElementById(id);
+          const isEmpty = !String(field.value).trim();
+          markFieldError(field, isEmpty);
+          if (isEmpty) {
+            valid = false;
+          }
+        });
+      }
+
+      if (!valid) {
+        const message = 'Please complete the required fields before continuing.';
         showStatus(message, 'error');
         alert(message);
       }
 
-      return isValid;
+      return valid;
     }
 
-    async function loadExistingProfile(user) {
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
+    function collectProfilePayload(userId) {
+      return {
+        id: userId,
+        name: document.getElementById('name').value.trim(),
+        age: Number(document.getElementById('age').value),
+        gender: getSelectedValue('gender'),
+        height: Number(document.getElementById('height').value),
+        weight: Number(document.getElementById('weight').value),
+        goal: getSelectedValue('goal'),
+        activity_level: document.getElementById('activityLevel').value,
+        experience: document.getElementById('experience').value,
+        diet: document.getElementById('diet').value,
+        routine: document.getElementById('routine').value,
+        sleep: Number(document.getElementById('sleep').value),
+        lifestyle_notes: document.getElementById('lifestyleNotes').value.trim(),
+        onboardingComplete: true
+      };
+    }
 
-      if (error) {
-        console.warn('Profile prefill skipped:', error);
-        return;
-      }
-
-      const profile = data || {};
-      const derivedName = profile.name || user.user_metadata?.name || '';
-      const derivedGoal = profile.goal || '';
-
-      nameInput.value = derivedName;
+    function fillProfile(profile = {}, fallbackUser = null) {
+      document.getElementById('name').value = profile.name || fallbackUser?.user_metadata?.name || '';
       document.getElementById('age').value = profile.age || '';
-      document.getElementById('activityLevel').value = profile.activityLevel || '';
-      document.getElementById('workoutsPerWeek').value = profile.workoutsPerWeek || '';
+      document.getElementById('height').value = profile.height || '';
+      document.getElementById('weight').value = profile.weight || '';
+      document.getElementById('activityLevel').value = profile.activity_level || profile.activityLevel || '';
       document.getElementById('experience').value = profile.experience || '';
+      document.getElementById('diet').value = profile.diet || '';
+      document.getElementById('routine').value = profile.routine || '';
+      document.getElementById('sleep').value = profile.sleep || '';
+      document.getElementById('lifestyleNotes').value = profile.lifestyle_notes || '';
 
-      if (derivedGoal) {
-        const matchingGoal = Array.from(onboardingForm.querySelectorAll('input[name="goal"]'))
-          .find((input) => input.value === derivedGoal);
-        if (matchingGoal) {
-          matchingGoal.checked = true;
+      if (profile.gender) {
+        const genderInput = Array.from(form.querySelectorAll('input[name="gender"]')).find((input) => input.value === profile.gender);
+        if (genderInput) {
+          genderInput.checked = true;
         }
       }
 
-      syncGoalSelection();
+      if (profile.goal) {
+        const goalInput = Array.from(form.querySelectorAll('input[name="goal"]')).find((input) => input.value === profile.goal);
+        if (goalInput) {
+          goalInput.checked = true;
+        }
+      }
+
+      syncChoiceCards();
     }
 
-    async function requireSession() {
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        throw error;
-      }
-
-      const session = data.session;
-
-      if (!session?.user) {
-        window.location.href = 'index.html';
-        return null;
-      }
-
-      return session.user;
-    }
-
-    async function saveProfile(event) {
-      event.preventDefault();
-      clearStatus();
-
-      if (!validateForm()) {
-        return;
-      }
-
-      setSavingState(true);
-
+    async function loadOnboarding() {
       try {
-        const user = await requireSession();
-        if (!user) {
-          return;
-        }
-
         const supabase = getSupabaseClient();
-        const payload = {
-          id: user.id,
-          name: nameInput.value.trim(),
-          goal: getSelectedGoal()
-        };
-
-        const { error } = await supabase
-          .from('profiles')
-          .upsert(payload, { onConflict: 'id' });
+        const { data, error } = await supabase.auth.getSession();
 
         if (error) {
           throw error;
         }
 
-        const successMessage = 'Profile saved successfully.';
-        showStatus(successMessage, 'success');
-        alert(successMessage);
-        window.location.href = 'dashboard.html';
-      } catch (error) {
-        console.error('Failed to save onboarding profile:', error);
-        const message = error?.message || 'Something went wrong while saving your profile.';
-        showStatus(message, 'error');
-        alert(message);
-      } finally {
-        setSavingState(false);
-      }
-    }
+        const session = data.session;
 
-    goalOptions.forEach((option) => {
-      option.addEventListener('click', () => {
-        const input = option.querySelector('input[name="goal"]');
-        input.checked = true;
-        goalGroup.classList.remove('input-error');
-        clearStatus();
-        syncGoalSelection();
-      });
-    });
-
-    nameInput.addEventListener('input', () => {
-      nameInput.classList.remove('input-error');
-      clearStatus();
-    });
-
-    onboardingForm.addEventListener('submit', saveProfile);
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const user = await requireSession();
-        if (!user) {
+        if (!session?.user) {
+          window.location.href = 'index.html';
           return;
         }
 
-        await loadExistingProfile(user);
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          throw profileError;
+        }
+
+        fillProfile(profile || {}, session.user);
       } catch (error) {
-        console.error('Unable to initialize onboarding:', error);
-        const message = error?.message || 'Unable to verify your session.';
+        console.error('Failed to initialize onboarding:', error);
+        const message = error?.message || 'Unable to load your onboarding details.';
         showStatus(message, 'error');
         alert(message);
       }
+    }
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+
+      if (!validateStep(3)) {
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.classList.add('btn-loading');
+      submitButton.textContent = '';
+
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase.auth.getSession();
+
+        if (error) {
+          throw error;
+        }
+
+        const session = data.session;
+
+        if (!session?.user) {
+          window.location.href = 'index.html';
+          return;
+        }
+
+        const payload = collectProfilePayload(session.user.id);
+
+        const { error: upsertError } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' });
+
+        if (upsertError) {
+          throw upsertError;
+        }
+
+        showStatus('Onboarding saved successfully. Redirecting to your dashboard...', 'success');
+        alert('Onboarding saved successfully.');
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        console.error('Failed to save onboarding profile:', error);
+        const message = error?.message || 'Unable to save your onboarding profile.';
+        showStatus(message, 'error');
+        alert(message);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.classList.remove('btn-loading');
+        submitButton.textContent = 'Save and Continue';
+      }
+    }
+
+    document.querySelectorAll('[data-choice]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const input = card.querySelector('input');
+        if (input) {
+          input.checked = true;
+        }
+        syncChoiceCards();
+        clearStatus();
+        document.getElementById('genderGroup').classList.remove('input-error');
+        document.getElementById('goalGroup').classList.remove('input-error');
+      });
+    });
+
+    document.querySelectorAll('.input').forEach((field) => {
+      field.addEventListener('input', () => {
+        field.classList.remove('input-error');
+        clearStatus();
+      });
+    });
+
+    backButton.addEventListener('click', () => {
+      currentStep = Math.max(1, currentStep - 1);
+      updateProgress();
+    });
+
+    nextButton.addEventListener('click', () => {
+      if (!validateStep(currentStep)) {
+        return;
+      }
+
+      currentStep = Math.min(TOTAL_STEPS, currentStep + 1);
+      updateProgress();
+    });
+
+    form.addEventListener('submit', handleSubmit);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateProgress();
+      await loadOnboarding();
     });
   </script>
 </body>

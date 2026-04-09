@@ -1009,14 +1009,29 @@
     // ---- Landing page logic ----
     const authModal = document.getElementById('authModal');
 
-    function showToast(message) {
-      alert(message);
+    function showToast(message, type = 'info', duration = 2000) {
+      const container = document.getElementById('toast-container');
+      if (!container) {
+        return;
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.setAttribute('role', 'status');
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      const dismissToast = () => {
+        toast.classList.add('toast-out');
+        window.setTimeout(() => toast.remove(), 300);
+      };
+
+      window.setTimeout(dismissToast, duration);
     }
 
     function reportAuthError(error, fallbackMessage) {
       const message = error?.message || fallbackMessage;
       console.error('Auth error:', error);
-      alert(message);
       return message;
     }
 
@@ -1101,7 +1116,6 @@
         closeAuthModal();
         if (user.emailConfirmationRequired) {
           showToast(`Account created for ${email}. Please verify your email before logging in.`, 'success', 5000);
-          alert('Signup successful. Please check your email and confirm your account before logging in.');
         } else {
           showToast(`Welcome to Fitnessify AI, ${name}! Let's build your profile.`, 'success');
           setTimeout(() => { window.location.href = 'onboarding.html'; }, 900);
