@@ -31,6 +31,10 @@ function normalizeAuthError(error, fallbackMessage) {
   return new Error(fallbackMessage);
 }
 
+function isMissingSessionError(error) {
+  return error?.name === 'AuthSessionMissingError' || /auth session missing/i.test(error?.message || '');
+}
+
 async function ensureProfile(user, profile = {}) {
   const supabase = getSupabaseClient();
   const payload = {
@@ -72,6 +76,17 @@ async function loadUserProfile(user) {
 
   currentUserCache = mergedUser;
   return mergedUser;
+}
+
+async function getSession() {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    throw normalizeAuthError(error, 'Unable to check your session.');
+  }
+
+  return data.session || null;
 }
 
 async function signUp(email, password, metadata = {}) {
@@ -175,20 +190,20 @@ const AuthManager = {
     }
 
     try {
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase.auth.getUser();
+      const session = await getSession();
 
-      if (error) {
-        throw error;
-      }
-
-      if (!data?.user) {
+      if (!session?.user) {
         currentUserCache = null;
         return null;
       }
 
-      return loadUserProfile(data.user);
+      return loadUserProfile(session.user);
     } catch (error) {
+      if (isMissingSessionError(error)) {
+        currentUserCache = null;
+        return null;
+      }
+
       throw normalizeAuthError(error, 'Unable to check your session.');
     }
   },
@@ -275,7 +290,9 @@ const AuthManager = {
   trackEvent(eventName, metadata = {}) {
     console.info('Analytics event:', eventName, metadata);
     return Promise.resolve();
-  }
+  },
+
+  getSession
 };
 
 window.getSupabaseClient = getSupabaseClient;

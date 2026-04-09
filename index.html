@@ -1009,6 +1009,10 @@
     // ---- Landing page logic ----
     const authModal = document.getElementById('authModal');
 
+    function showToast(message) {
+      alert(message);
+    }
+
     function reportAuthError(error, fallbackMessage) {
       const message = error?.message || fallbackMessage;
       console.error('Auth error:', error);
@@ -1019,13 +1023,17 @@
     // Redirect if already logged in
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const user = await AuthManager.getCurrentUser(true);
-        if (user) {
-          window.location.href = user.onboardingComplete ? 'dashboard.html' : 'onboarding.html';
+        const session = await AuthManager.getSession();
+        if (!session?.user) {
           return;
         }
+
+        const user = await AuthManager.getCurrentUser(true);
+        if (user && session.user) {
+          window.location.href = user.onboardingComplete ? 'dashboard.html' : 'onboarding.html';
+        }
       } catch (error) {
-        reportAuthError(error, 'Unable to restore your session right now.');
+        console.warn('Skipping automatic redirect because no active session was found.', error);
       }
     });
 
